@@ -2,6 +2,8 @@ package com.skilldistillery.filmquery.app;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.skilldistillery.filmquery.database.DatabaseAccessor;
 import com.skilldistillery.filmquery.database.DatabaseAccessorObject;
@@ -23,27 +25,35 @@ public class FilmQueryApp {
 	}
 
 	private void startUserInterface(Scanner input) {
+		System.out.print("Welcome! ");
 		boolean run = true;
 		while (run) {
+			System.out.println("Please choose from the following menu:");
 			System.out.println("1. Look up film by id.");
 			System.out.println("2. Search for film by keyword.");
 			System.out.println("3. Exit.\n");
 			String choice = input.nextLine();
-
-			switch (choice) {
-			case "1":
-				filmById(input);
-				break;
-			case "2":
-				searchForFilm(input);
-				break;
-			case "3":
-				run = false;
-				break;
-
-			default:
-				System.out.println("\nInvalid input. Please try again.\n");
-				break;
+			boolean choiceValidated = inputCheckerInt(choice, 3);
+			if (choiceValidated) {
+				switch (choice) {
+				case "1":
+					filmById(input);
+					break;
+				case "2":
+					searchForFilm(input);
+					break;
+				case "3":
+					System.out.println("Exiting.");
+					run = false;
+					break;
+					
+				default:
+					System.out.println("\nInvalid input. Please try again.\n");
+					break;
+				}
+			}
+			else {
+				continue;
 			}
 		}
 
@@ -52,16 +62,22 @@ public class FilmQueryApp {
 	private void filmById(Scanner input) {
 		boolean run = true;
 		while (run) {
-			System.out.print("\nInput id: ");
+			System.out.print("\nInput id (1 - 1000): ");
 			String choice = input.nextLine();
-			int inputInt = Integer.parseInt(choice);
-			Film film = db.getFilmById(inputInt);
-			if (film == null) {
-				run = tryAgainChoices(input);
+			boolean choiceValidated = inputCheckerInt(choice, 1000);
+			if (choiceValidated) {
+				int inputInt = Integer.parseInt(choice);
+				Film film = db.getFilmById(inputInt);
+				if (film == null) {
+					run = tryAgainChoices(input);
+				}
+				else {
+					System.out.println(film.toString());
+					run = false;
+				}
 			}
 			else {
-				System.out.println(film.toString());
-				run = false;
+				continue;
 			}
 		}
 	}
@@ -77,13 +93,14 @@ public class FilmQueryApp {
 				run = tryAgainChoices(input);
 			} 
 			else {
-				System.out.println(shortOuput(filmList));
+				System.out.println(searchOuput(filmList));
+				System.out.println("Search complete.\n");
 				run = false;
 			}
 		}
 	}
 	
-	private String shortOuput(ArrayList<Film> list) {
+	private String searchOuput(ArrayList<Film> list) {
 		StringBuilder sb = new StringBuilder();
 		for (Film film : list) {
 			sb.append(film.toString());
@@ -92,7 +109,7 @@ public class FilmQueryApp {
 	}
 	
 	private boolean tryAgainChoices(Scanner input) {
-		System.out.println("\nNo such film. Try again?");
+		System.out.println("\nSearch complete. No films found. Try again?");
 		System.out.print("\n(Y)es or (N)o: ");
 		String tryAgain = input.nextLine();
 		switch (tryAgain) {
@@ -122,4 +139,33 @@ public class FilmQueryApp {
 		}
 		return true;
 	}
+	
+	private boolean inputCheckerInt(String input, int range) {
+		if (!input.isEmpty()) {
+			Pattern pattern = Pattern.compile("[0-9]*");
+			Matcher patternMatch = pattern.matcher(input);
+			boolean inputMatchesPattern = patternMatch.matches();
+			if (inputMatchesPattern) {
+				int inputParsedToInteger = Integer.parseInt(input);
+				if (inputParsedToInteger <= range && inputParsedToInteger >= 1) {
+					return true;
+				} 
+				else {
+					System.out.println("\nInvalid input. Please try again.\n"); 
+					return false;
+				}
+			} 
+			else {
+				System.out.println("\nInvalid input. Please try again.\n");
+				return false;
+			}
+		}
+
+		else {
+			System.out.println("\nInvalid input. Please try again.\n");
+			return false;
+		}
+	}
+	
+	
 }
