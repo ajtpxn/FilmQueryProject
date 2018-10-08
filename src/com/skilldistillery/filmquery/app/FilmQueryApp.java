@@ -1,7 +1,6 @@
 package com.skilldistillery.filmquery.app;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import com.skilldistillery.filmquery.database.DatabaseAccessor;
@@ -27,9 +26,8 @@ public class FilmQueryApp {
 		boolean run = true;
 		while (run) {
 			System.out.println("1. Look up film by id.");
-			System.out.println("2. Search for file.");
-			System.out.println("3. Exit.");
-			System.out.print("Your choice: ");
+			System.out.println("2. Search for film by keyword.");
+			System.out.println("3. Exit.\n");
 			String choice = input.nextLine();
 
 			switch (choice) {
@@ -59,39 +57,7 @@ public class FilmQueryApp {
 			int inputInt = Integer.parseInt(choice);
 			Film film = db.getFilmById(inputInt);
 			if (film == null) {
-				System.out.println("\nNo such film. Try again?");
-				System.out.print("\n(Y)es or (N)o: ");
-				String tryAgain = input.nextLine();
-				switch (tryAgain) {
-				case "y":
-					break;
-				case "Y":
-					break;
-				case "yes":
-					break;
-				case "Yes":
-					break;
-				case "n":
-					System.out.println();
-					run = false;
-					break;
-				case "N":
-					System.out.println();
-					run = false;
-					break;
-				case "no":
-					System.out.println();
-					run = false;
-					break;
-				case "No":
-					System.out.println();
-					run = false;
-					break;
-				default:
-					System.out.println();
-					run = false;
-					break;
-				}
+				run = tryAgainChoices(input);
 			}
 			else {
 				System.out.println(film.toString());
@@ -108,40 +74,9 @@ public class FilmQueryApp {
 			String searchString = "%" + inputString + "%";
 			ArrayList<Film> filmList = db.getFilmBySearch(searchString);
 			if (filmList.size() == 0) {
-				System.out.println("\nNo such film. Try again?");
-				System.out.print("\n(Y)es or (N)o: ");
-				String tryAgain = input.nextLine();
-				switch (tryAgain) {
-				case "y":
-					break;
-				case "Y":
-					break;
-				case "yes":
-					break;
-				case "Yes":
-					break;
-				case "n":
-					System.out.println();
-					run = false;
-					break;
-				case "N":
-					System.out.println();
-					run = false;
-					break;
-				case "no":
-					System.out.println();
-					run = false;
-					break;
-				case "No":
-					System.out.println();
-					run = false;
-					break;
-				default:
-					System.out.println();
-					run = false;
-					break;
-				}
-			} else {
+				run = tryAgainChoices(input);
+			} 
+			else {
 				System.out.println(shortOuput(filmList));
 				run = false;
 			}
@@ -154,5 +89,37 @@ public class FilmQueryApp {
 			sb.append(film.toString());
 		}
 		return sb.toString();
+	}
+	
+	private boolean tryAgainChoices(Scanner input) {
+		System.out.println("\nNo such film. Try again?");
+		System.out.print("\n(Y)es or (N)o: ");
+		String tryAgain = input.nextLine();
+		switch (tryAgain) {
+		case "y":
+			break;
+		case "Y":
+			break;
+		case "yes":
+			break;
+		case "Yes":
+			break;
+		case "n":
+			System.out.println();
+			return false;
+		case "N":
+			System.out.println();
+			return false;
+		case "no":
+			System.out.println();
+			return false;
+		case "No":
+			System.out.println();
+			return false;
+		default:
+			System.out.println();
+			return false;
+		}
+		return true;
 	}
 }

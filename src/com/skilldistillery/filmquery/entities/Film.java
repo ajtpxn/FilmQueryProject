@@ -201,7 +201,7 @@ public class Film {
 	public String toString() {
 		DatabaseAccessor db = new DatabaseAccessorObject();
 		String language = db.getLanguage(id);
-		return "\n" + id + ". " + title + ".\nRelease Year: " + release_year +  "\nDescription: " + description 
+		return "\n" + id + ". " + title + "\nRelease Year: " + release_year +  "\nDescription: " + description 
 				+ "\nRating: " + rating +  "\nLanguage: " + language +  "\nCast: " + castToString() + "\n";
 	}
 	
