@@ -1,5 +1,11 @@
 package com.skilldistillery.filmquery.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.skilldistillery.filmquery.database.DatabaseAccessor;
+import com.skilldistillery.filmquery.database.DatabaseAccessorObject;
+
 public class Film {
 
 	int id;
@@ -13,6 +19,7 @@ public class Film {
 	double replacement_cost;
 	String rating;
 	String special_features;
+	List<Actor> cast = new ArrayList<>();
 
 	public int getId() {
 		return id;
@@ -102,6 +109,14 @@ public class Film {
 		this.special_features = special_features;
 	}
 
+	public List<Actor> getCast() {
+		return cast;
+	}
+
+	public void setCast(List<Actor> cast) {
+		this.cast = cast;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -169,16 +184,30 @@ public class Film {
 		return true;
 	}
 
+	private String castToString() {
+		String output = null;
+		StringBuilder tempString = new StringBuilder("\n");
+
+		for (Actor actor : cast) {
+			tempString.append(actor.toString());
+			tempString.append("\n");
+		}
+		output = tempString.toString();
+		return output;
+	}
+	
+
 	@Override
 	public String toString() {
-		return "Film [id: " + id + ", title: " + title + ", description: " + description + ", release_year: "
-				+ release_year + ", language_id: " + language_id + ", rental_duration: " + rental_duration
-				+ ", rental_rate: " + rental_rate + ", length: " + length + ", replacement_cost: " + replacement_cost
-				+ ", rating: " + rating + ", special_features: " + special_features + "]";
+		DatabaseAccessor db = new DatabaseAccessorObject();
+		String language = db.getLanguage(id);
+		return "\n" + id + ". " + title + ".\nRelease Year: " + release_year +  "\nDescription: " + description 
+				+ "\nRating: " + rating +  "\nLanguage: " + language +  "\nCast: " + castToString() + "\n";
 	}
-
+	
 	public Film(int id, String title, String description, int release_year, int language_id, int rental_duration,
-			double rental_rate, int length, double replacement_cost, String rating, String special_features) {
+			double rental_rate, int length, double replacement_cost, String rating, String special_features,
+			List<Actor> cast) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -191,6 +220,8 @@ public class Film {
 		this.replacement_cost = replacement_cost;
 		this.rating = rating;
 		this.special_features = special_features;
+		this.cast = cast;
 	}
+	
 
 }

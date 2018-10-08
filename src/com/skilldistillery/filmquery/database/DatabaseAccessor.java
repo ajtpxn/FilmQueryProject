@@ -1,6 +1,6 @@
 package com.skilldistillery.filmquery.database;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
@@ -10,6 +10,10 @@ public interface DatabaseAccessor {
 
 	public Actor getActorById(int actorId);
 
-	public List<Actor> getActorsByFilmId(int filmId);
+	public ArrayList<Actor> getActorsByFilmId(int filmId);
+	
+	public ArrayList<Film> getFilmBySearch(String searchString);
+	
+	public String getLanguage(int filmId);
 	
 }

@@ -82,7 +82,7 @@ public class Actor {
 
 	@Override
 	public String toString() {
-		return "Actor [id: " + id + ", firstName: " + firstName + ", lastName: " + lastName + ", films: " + films + "]";
+		return id + ":\t" + firstName + " " + lastName;
 	}
 
 	public Actor(int id, String firstName, String lastName, List<Film> films) {
@@ -91,6 +91,13 @@ public class Actor {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.films = films;
+	}
+
+	public Actor(int id, String firstName, String lastName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 }
